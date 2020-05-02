@@ -2,10 +2,7 @@ from rest_framework import serializers
 from .models import Graph_Site, Techay_User, Social_Networking, Plan, User_Client, Address, Graph_Team
 from .models import Notification, Vote, Video, Collect
 
- GraphSiteSerializer, TechayUserSerializer, 
- SocialNetworkingSerializer, PlanSerializer UserClientSerializer AddressSerializer GraphTeamSerializer 
- NotificationSerializer,  VoteSerializer, VideoSerializer, CollectSerializer
-
+ 
 class GraphSiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Graph_Site
