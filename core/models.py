@@ -1,6 +1,19 @@
 from django.db import models
 import calendar
 
+
+
+
+JAN = "Janeiro";FEV = "Fevereiro";MAR = "Março";
+ABR = "Abril";MAI = "Maio";JUN = "Junho";
+JUL = "Julho";AGO = "Agosto";SET="Setembro";
+OUT = "Outubro";NOV = "Novembro"; DEZ = "Dezembro";
+
+MONTH_CHOICES = (
+    (JAN, "Janeiro"), (FEV, "Fevereiro"), (MAR, "Março"), (ABR, "Abril"),
+    (MAI, "Maio"), (JUN, "Junho"), (JUL, "Julho"), (AGO, "Agosto"),
+    (SET, "Setembro"), (OUT, "Outubro"), (NOV, "Novembro"), (DEZ, "Dezembro"),
+)
 # Create your models here.
 class Techay_User(models.Model):
 	photo = models.ImageField(upload_to="photo_users_techay")
@@ -12,12 +25,18 @@ class Techay_User(models.Model):
 	responsibility = models.TextField()
 	biography = models.TextField()
 	linkedIn = models.CharField(max_length=200)
-	Music = models.FileField(upload_to="music")
+	music = models.FileField(upload_to="music")
+
+ #  def save(self, *args, **kwargs):
+ #        do_something()
+ #        super().save(*args, **kwargs)  # Call the "real" save() method.
+ #        do_something_else()
 
 
 class Social_Networking(models.Model):
 	link = models.CharField(max_length=200)
 	techay_user = models.ForeignKey(Techay_User, on_delete=models.CASCADE)
+
 
 
 class Plan(models.Model):
@@ -43,24 +62,45 @@ class Address(models.Model):
 	state = models.CharField(max_length=100)
 
 class Graph_Site(models.Model):
-	JAN = "Janeiro";FEB = "Fevereiro";MAR = "Março"
-	ABR = "Abril";MAI = "Maio";JUN = "Junho"
-	JUL = "Julho";AGO = "Agosto";SET="Setembro"
-	OUT = "Outubro";NOV = "Novembro"; DEZ = "Dezembro"
-
-	MONTH_CHOICES = (
-	    (JAN, "Janeiro"),
-	    (FEV, "Fevereiro"),
-	    (MAR, "Março"),
-	    (ABR, "Abril"),
-	    (MAI, "Maio"),
-	    (JUN, "Junho"),
-	    (JUL, "Julho"),
-	    (AGO, "Agosto"),
-	    (SET, "Setembro"),
-	    (OUT, "Outubro"),
-	    (NOV, "Novembro"),
-	    (DEZ, "Dezembro"),
-	)
-	month = models.CharField(max_length=9, choices=MONTH_CHOICES, default=JAN)
+	month = models.CharField(max_length=20, choices=MONTH_CHOICES, default=JAN)
 	visits = models.IntegerField()
+
+
+class Graph_Team(models.Model):
+	pontos = models.IntegerField()
+	month = models.CharField(max_length=20, choices=MONTH_CHOICES, default=JAN)
+
+
+class Vote(models.Model):
+	SIM = 'Sim'; NÃO = 'Não'; BRANCO = 'Branco'
+	CHOICES = ((SIM, 'Sim'), (NÃO, 'Não'), (BRANCO, 'Branco'))
+	
+	images = models.ImageField(upload_to="image_vote", null=True)
+	details = models.TextField()
+	Vote = models.CharField(max_length=9, choices=CHOICES, default=BRANCO)
+
+
+class Notification(models.Model):
+	VOCÊ = 'Você'; EQUIPE = 'Equipe'; FINANÇAS = 'Finanças'
+	CHOICES_CLIENTE = ((VOCÊ, 'Você'), (EQUIPE, 'Equipe'), (FINANÇAS, 'Finanças'))
+
+	types = models.CharField(max_length=9, choices=CHOICES_CLIENTE, default=VOCÊ)
+	photo = models.ImageField(upload_to='photo_notification', null=True)
+	details = models.TextField()
+	date = models.DateTimeField()
+	iink_notification = models.CharField(max_length=200, null=True, blank=True, help_text=('Se houver. '))
+
+class Video(models.Model):
+	REUNIÃO = 'Reunião'; ACADEMIA = 'Academia';
+	CHOICES_TYPE = ((REUNIÃO, 'Reunião'), (ACADEMIA, 'Academia'))
+	
+	title = models.CharField(max_length=200)
+	date = models.DateField()
+	link_youtube = models.CharField(max_length=200)
+	types = models.CharField(max_length=20, choices=CHOICES_TYPE, default=REUNIÃO)
+
+class Collect(models.Model):
+	cod = models.IntegerField()
+	client = models.ForeignKey(User_Client, on_delete=models.CASCADE)
+	date = models.DateTimeField()
+	billet = models.CharField(max_length=200, help_text=('Link do boleto.'))
