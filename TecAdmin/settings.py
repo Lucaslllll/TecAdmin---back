@@ -30,7 +30,7 @@ SECRET_KEY = '^l%7%=ipxc__pearjtu3td8qi5^m1_iwda=&kz*(fg$pi)-=zu'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 
@@ -146,6 +146,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+
+EMAIL_FILE_PATH = '/tmp/app-messages'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = 'techay.oficial@gmail.com'
+EMAIL_HOST_PASSWORD = 'techay1234'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+PASSWORD_RESET_TIMEOUT_DAYS = 1
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 # username without unique

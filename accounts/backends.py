@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
+from core.models import Techay_User, User_Client
 
 
 class EmailAuthBackend(object):
