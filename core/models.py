@@ -1,6 +1,6 @@
 from django.db import models
 import calendar
-
+from cloudinary.models import CloudinaryField
 
 
 
@@ -16,7 +16,12 @@ MONTH_CHOICES = (
 )
 # Create your models here.
 class Techay_User(models.Model):
-	photo = models.ImageField(upload_to="photo_users_techay")
+	photo =CloudinaryField('foto', null=True, 
+        overwrite=True,
+        resource_type="image",
+        transformation={"quality": "auto:good", "width": 350, "height": 150},
+        format="png",
+    )
 	name = models.CharField(max_length=124)
 	cpf = models.CharField(max_length=14)
 	email = models.EmailField()
@@ -49,7 +54,7 @@ class User_Client(models.Model):
 	email = models.EmailField()
 	password = models.CharField(max_length=100)
 	cpf_cnpj = models.CharField(max_length=30)
-	link_site = models.CharField(max_length=200)
+	link_site = models.CharField(max_length=200, blank=True)
 
 class Address(models.Model):
 	client = models.OneToOneField(User_Client, on_delete=models.CASCADE)
@@ -75,7 +80,12 @@ class Vote(models.Model):
 	SIM = 'Sim'; NÃO = 'Não'; BRANCO = 'Branco'
 	CHOICES = ((SIM, 'Sim'), (NÃO, 'Não'), (BRANCO, 'Branco'))
 	
-	images = models.ImageField(upload_to="image_vote", null=True)
+	images = CloudinaryField('foto', null=True, 
+        overwrite=True,
+        resource_type="image",
+        transformation={"quality": "auto:good", "width": 350, "height": 150},
+        format="png",
+    )
 	details = models.TextField()
 	Vote = models.CharField(max_length=9, choices=CHOICES, default=BRANCO)
 
@@ -85,7 +95,12 @@ class Notification(models.Model):
 	CHOICES_CLIENTE = ((VOCÊ, 'Você'), (EQUIPE, 'Equipe'), (FINANÇAS, 'Finanças'))
 
 	types = models.CharField(max_length=9, choices=CHOICES_CLIENTE, default=VOCÊ)
-	photo = models.ImageField(upload_to='photo_notification', null=True)
+	photo = CloudinaryField('foto', null=True, 
+        overwrite=True,
+        resource_type="image",
+        transformation={"quality": "auto:good", "width": 350, "height": 150},
+        format="png",
+    )
 	details = models.TextField()
 	date = models.DateTimeField()
 	iink_notification = models.CharField(max_length=200, null=True, blank=True, help_text=('Se houver. '))
