@@ -8,6 +8,7 @@ from django.contrib.auth.hashers import check_password
 
 from .backends import EmailAuthBackend
 from core.models import Techay_User, User_Client
+from .models import Token_Techay, Token_Client
 
 
 class LoginTechaySerializer(serializers.Serializer):
@@ -52,3 +53,55 @@ class LoginClientSerializer(serializers.Serializer):
             raise serializers.ValidationError("Senha errada")
         else:
             raise serializers.ValidationError("Email errado")
+
+class VerifyTechaySerializer(serializers.Serializer):
+    pk = serializers.CharField(help_text=('Primary Key do usuário TecHAY.'))
+    token = serializers.CharField(help_text=('suposto Token do Usuário da TecHAY que está em login.'))
+    
+    def validate(self, data):
+        pk = data['pk']
+        token = data['token']
+
+        try:
+            techay = Techay_User.objects.get(pk=pk)
+        except Techay_User.DoesNotExist:
+            techay = None
+
+        if techay == None:
+            raise serializers.ValidationError("Membro não existe")
+        else:
+            try:
+                get_token = Token_Techay.objects.get(techay_user=techay.pk)
+            except Token_Techay.DoesNotExist:
+                get_token = None
+
+            if get_token == None:
+                raise serializers.ValidationError("Não está logado")
+            else:
+                return get_token.value
+
+class VerifyClientSerializer(serializers.Serializer):
+    pk = serializers.CharField(help_text=('Primary Key do cliente.'))
+    token = serializers.CharField(help_text=('suposto Token do cliente que está em login.'))
+    
+    def validate(self, data):
+        pk = data['pk']
+        token = data['token']
+
+        try:
+            client = User_Client.objects.get(pk=pk)
+        except User_Client.DoesNotExist:
+            client = None
+
+        if client == None:
+            raise serializers.ValidationError("Cliente não existe")
+        else:
+            try:
+                get_token = Token_Client.objects.get(client=client.pk)
+            except Token_Client.DoesNotExist:
+                get_token = None
+
+            if get_token == None:
+                raise serializers.ValidationError("Não está logado")
+            else:
+                return get_token.value

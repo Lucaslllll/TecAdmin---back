@@ -4,7 +4,8 @@ from rest_framework.response import Response
 
 from rest_framework.authtoken.models import Token
 
-from .serializers import LoginTechaySerializer, LoginClientSerializer
+# coloco essa importanção como tupla para facilitar depois ;)
+from .serializers import (LoginTechaySerializer, LoginClientSerializer, VerifyTechaySerializer, VerifyClientSerializer)
 from .utils import create_token
 from .tokens import account_activation_token
 from .models import Token_Techay, Token_Client
@@ -80,4 +81,43 @@ class LoginClientAPI(generics.GenericAPIView):
                 "justificativa": "Login já realizado!"
             })
 
-# lembrete: verification
+
+class VerifyTechayAPI(generics.GenericAPIView):
+    serializer_class = VerifyTechaySerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+
+        # token dado
+        token = request.data['token']
+
+        # token do usuário pego pelo chave primária
+        get_token = serializer.validated_data
+
+        if get_token == token:
+            return Response(True,)
+        else:
+            return Response(False,)
+
+
+class VerifyClientAPI(generics.GenericAPIView):
+    serializer_class = VerifyClientSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+
+        # token dado
+        token = request.data['token']
+
+        # token do usuário pego pelo chave primária
+        get_token = serializer.validated_data
+
+        if get_token == token:
+            return Response(True,)
+        else:
+            return Response(False,)
+
+
+# lembrete: logout
