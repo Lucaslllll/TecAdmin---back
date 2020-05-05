@@ -4,19 +4,13 @@ from rest_framework.response import Response
 
 from rest_framework.authtoken.models import Token
 
-from .serializers import LoginTechaySerializer
+from .serializers import LoginTechaySerializer, LoginClientSerializer
 from .utils import create_token
 from .tokens import account_activation_token
 from .models import Token_Techay, Token_Client
 
 # make and after compare 
-def do(techay):
-	value = create_token()
-	token = Token_Techay.objects.create(techay_user=techay, value=value)
-	# in the future I can use to compare
-	account_activation_token.make_token(value)
 
-	return token
 
 class LoginTechayAPI(generics.GenericAPIView):
     serializer_class = LoginTechaySerializer   
@@ -28,19 +22,62 @@ class LoginTechayAPI(generics.GenericAPIView):
         email = serializer.validated_data
 
         techay = Techay_User.objects.get(email=email)
-        
+        value = create_token()
+
         try: 
-            token = do(techay)
+            token = Token_Techay.objects.create(techay_user=techay, value=value)
         except: 
+            token = None
+
+
+        if token != None:
+            return Response({
+
+                "user": LoginTechaySerializer(techay, context=self.get_serializer_context()).data,
+                "token": token.value,
+                "estado": True
+            })
+        else:
+            token = Token_Techay.objects.get(techay_user=techay)
             return Response({
                 "id": techay.id,
-                "estado": False
+                "estado": False,
+                "token": token.value,
+                "justificativa": "Login do Membro já foi realizado!"
             })
 
-        return Response({
+class LoginClientAPI(generics.GenericAPIView):
+    serializer_class = LoginClientSerializer   
 
-            "user": LoginTechaySerializer(techay, context=self.get_serializer_context()).data,
-            "token": token.value,
-            "estado": True
-        })
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        email = serializer.validated_data
 
+        client = User_Client.objects.get(email=email)
+        value = create_token()
+
+        try: 
+            token = Token_Client.objects.create(client=client, value=value)
+        except: 
+            token = None
+
+
+        if token != None:
+            return Response({
+
+                "user": LoginTechaySerializer(client, context=self.get_serializer_context()).data,
+                "token": token.value,
+                "estado": True
+            })
+        else:
+            token = Token_Client.objects.get(client=client)
+            return Response({
+                "id": client.id,
+                "estado": False,
+                "token": token.value,
+                "justificativa": "Login já realizado!"
+            })
+
+# lembrete: verification

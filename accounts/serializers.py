@@ -16,6 +16,7 @@ class LoginTechaySerializer(serializers.Serializer):
 
     def validate(self, data):
         email = data['email']
+        password = data['password']
 
         try:
             techay = Techay_User.objects.get(email=email)
@@ -30,4 +31,24 @@ class LoginTechaySerializer(serializers.Serializer):
         else:
             raise serializers.ValidationError("Email errado")
 
-# after finish the first continues with login of client | LEMBRETE |
+
+class LoginClientSerializer(serializers.Serializer):
+    email = serializers.CharField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        email = data['email']
+        password = data['password']
+
+        try:
+            client = User_Client.objects.get(email=email)
+        except User_Client.DoesNotExist:
+            client = None
+
+        if client != None:
+            if client.password == password:
+                return client.email
+
+            raise serializers.ValidationError("Senha errada")
+        else:
+            raise serializers.ValidationError("Email errado")
