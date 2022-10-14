@@ -1,4 +1,5 @@
 # TecAdmin---back
+Backend pensado para um antigo projeto para administração da empresa TecHAY.
 
 # Dependences
 - pip install django
