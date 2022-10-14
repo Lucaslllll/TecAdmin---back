@@ -8,6 +8,4 @@
 - pip install cloudinary
 - pip install six
 
-# Super User to test of db
-- login: brinfo
-- password: root1234
+
